@@ -4,7 +4,9 @@ import ReactChess from './ReactChess';
 
 const App: React.FC = () => {
   return (
+    <div>
     <ReactChess></ReactChess>
+    </div>
   );
 }
 
