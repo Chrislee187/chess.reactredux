@@ -1,4 +1,13 @@
-# Folder initially created with
+# Introduction
+Simple React site thats fronts my [chess.webapi](..\chess.webapi) service to play a game of chess.
+
+Created for direct comparison of approaches to creating single-page-applications.
+
+See also;
+
+* [chess.blazor](..\chess.blazor)
+
+# React app created using the following
 
 ```
 npx create-react-app chess.reactredux --typescript
