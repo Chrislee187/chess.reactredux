@@ -1,4 +1,5 @@
 import MoveSelectionCellsManager from "./MoveSelectionCellsManager";
+import { BoardCellBuilder } from "./BoardCellBuilder";
 
 
 describe('ContainsPlayerPiece', () => {
@@ -45,26 +46,4 @@ describe('ContainsPlayerPiece', () => {
     });
 });
 
-class BoardCellPropsBuilder {
-    private pieceIsWhite:boolean = true;
-    private isEmptySquare:boolean = false;
-    private isSourceLocation:boolean = true;
-    private isDestinationLocation:boolean = false;
-    public build(): any {
-        return {
-            PieceIsWhite: this.pieceIsWhite,
-            IsEmptySquare: this.isEmptySquare,
-            IsSourceLocation: this.isSourceLocation,
-            IsDestinationLocation: this.isDestinationLocation
-        }
-    }
 
-    public withBlackPiece():BoardCellPropsBuilder {
-        this.pieceIsWhite = false;
-        return this;
-    }
-    public withWhitePiece():BoardCellPropsBuilder {
-        this.pieceIsWhite = true;
-        return this;
-    }
-}

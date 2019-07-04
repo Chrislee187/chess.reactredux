@@ -1,11 +1,11 @@
 import MoveSelection from './MoveSelection'
-import { MoveSelectionCellsManagerMocker } from './MoveSelectionCellsManagerMocker';
+import { BoardCellBuilder } from './BoardCellBuilder';
 
 describe('initial state is correct', () => {
 
     let moveSelection:MoveSelection;
     beforeAll(() => {
-        moveSelection = new MoveSelection(null);
+        moveSelection = new MoveSelection({});
     });
 
     test('haveMove is false', () => {
@@ -21,27 +21,23 @@ describe('initial state is correct', () => {
 describe('selections', () => {
 
     let moveSelection:MoveSelection;
-    let cellsManagerMock: MoveSelectionCellsManagerMocker;
     let anyLocation ="d2";
     let anyDestination ="d4";
-    let anyMoves = [];
+    let anyMoves:any = [];
     let whiteToPlay = true;
     let blackToPlay = false;
-
+    let cells = {};
     beforeEach(() => {
-        cellsManagerMock = new MoveSelectionCellsManagerMocker();
-        moveSelection = new MoveSelection(cellsManagerMock.instance);
+        moveSelection = new MoveSelection(cells);
+        cells[anyLocation] = new BoardCellBuilder().build();
     });
 
     test('invalid location is ignored', () => {
 
-        cellsManagerMock.setupCellManagerGet(undefined);
-        moveSelection.selected(anyLocation, anyMoves, null);
+        moveSelection.selected(anyLocation, anyMoves, false);
 
         expect(moveSelection.from).toBe("");
-
-        cellsManagerMock.expectNoHighlightingOfSourceCells();
-        cellsManagerMock.expectNoHighlightingOfDestinationCells();        
+        expect(moveSelection.possibleDestinations.length).toBe(0);
     });
 
     test('valid source location highlights from and to', () => {
@@ -49,63 +45,58 @@ describe('selections', () => {
         let location = "d2";
         let availableMoves = [ `${location}d3`, `${location}d4`];
 
-        cellsManagerMock.setupCellManagerContainsPlayerPiece(true);
-
         moveSelection.selected(anyLocation, availableMoves, whiteToPlay);
 
         expect(moveSelection.from).toBe(anyLocation);
-        cellsManagerMock.expectHighlightingOfSourceCellAt(anyLocation);
-        cellsManagerMock.expectHighlightingOfDestinationCellsAt(["d3","d4"])
+        expect(moveSelection.possibleDestinations).toHaveLength(2);
     });
 
     test('source location that does not contain piece of right colour is ignored', () => {
         let location = "d2";
         let availableMoves = [ `${location}d3`, `${location}d4`];
-        cellsManagerMock.setupCellManagerContainsPlayerPiece(false);
-
+        cells[location] = new BoardCellBuilder().withBlackPiece().build();
         moveSelection.selected(location, availableMoves, whiteToPlay);
 
-        cellsManagerMock.expectNoHighlightingOfSourceCells();
-        cellsManagerMock.expectNoHighlightingOfDestinationCells();
+        expect(moveSelection.from).toBe("");
+        expect(moveSelection.possibleDestinations.length).toBe(0);
 
     });
 
     test('reselect same location deselects location', () => {
         let location = "d2";
-        let availableMoves = [ ];
+        let availableMoves:string[] = [ ];
 
         moveSelection.selected(location, availableMoves, whiteToPlay);
         moveSelection.selected(location, availableMoves, whiteToPlay);
 
         expect(moveSelection.from).toBe("");
-        cellsManagerMock.expectSourceHighlightingCleared();
-        cellsManagerMock.expectDestinationHighlightingCleared();
+        expect(moveSelection.possibleDestinations.length).toBe(0);
     });
 
     test('selecting new location of correct piece colour update from', () => {
         let location = "d2";
         let location2 = "e2";
-        let availableMoves = [ ];
+        let availableMoves:string[] = [ ];
 
         moveSelection.selected(location, availableMoves, whiteToPlay);
+        cells[location2] = new BoardCellBuilder().build();
         moveSelection.selected(location2, availableMoves, whiteToPlay);
 
         expect(moveSelection.from).toBe(location2);
-        cellsManagerMock.expectHighlightingOfSourceCellAt(location2);
-        cellsManagerMock.expectHighlightingOfSomeDestinationCells();
     });
 
-    test('selecting invalid desintation location is ignored', () => {
+    test('selecting invalid destination location is ignored', () => {
         let location = "d2";
         let destination = "a2";
-        let availableMoves = [ ];
+        let availableMoves:string[] = [ ];
 
+        cells[location] = new BoardCellBuilder().build();
         moveSelection.selected(location, availableMoves, whiteToPlay);
-        cellsManagerMock.setupCellManagerGet({
-            IsEmptySquare: true,
-            PieceIsWhite: false,
-            IsDestinationLocation: false,
-        });
+        
+        cells[destination] = new BoardCellBuilder()
+            .withEmptyCell()
+            .build();
+
         moveSelection.selected(destination, availableMoves, whiteToPlay);
 
         expect(moveSelection.from).toBe(location);
@@ -113,15 +104,13 @@ describe('selections', () => {
     });
 
     test('selecting a valid destination, sets To and Move', () => {
-
-        let availableMoves = [ ];
-
+        let availableMoves:string[] = [ ];
         moveSelection.selected(anyLocation, availableMoves, whiteToPlay);
-        cellsManagerMock.setupCellManagerGet({
-            IsEmptySquare: true,
-            PieceIsWhite: false,
-            IsDestinationLocation: true,
-        });
+        
+        cells[anyDestination] = new BoardCellBuilder()
+            .withEmptyCell()
+            .withDestinationLocation(true)
+            .build();
         moveSelection.selected(anyDestination, availableMoves, whiteToPlay);
 
         expect(moveSelection.from).toBe(anyLocation);

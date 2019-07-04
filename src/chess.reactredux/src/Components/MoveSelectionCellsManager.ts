@@ -9,8 +9,9 @@ export default class MoveSelectionCellsManager {
     }
 
     public containsPlayerPiece(location:string, playerIsWhite:boolean) {
-        let cell = this.cells[location];
+        let cell = this.get(location);
 
+        if(!cell) return false;
         if(this.cellIsEmpty(cell.props)) return false;
 
         return playerIsWhite === this.pieceIsWhite(cell.props);
@@ -21,6 +22,6 @@ export default class MoveSelectionCellsManager {
         return !props && props.Piece === ' ' || props.Piece === '.'
     }
     public pieceIsWhite(props:any) {
-        return props && props.Piece.toUpperCase() === props.Piece;
+        return !this.cellIsEmpty(props) && props.Piece.toUpperCase() === props.Piece;
     }
 }

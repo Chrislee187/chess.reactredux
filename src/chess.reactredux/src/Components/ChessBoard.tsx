@@ -29,36 +29,59 @@ export default class ChessBoard extends React.Component<Props,State>  {
     readonly state: State = initialState;
 
     private blackCell:boolean = false;
-    private cells:any = {dummy: ""};
+    private cells:any = {};
 
     private moveSelection:MoveSelection;
 
     constructor(props:Props) {
         super(props);
-        this.moveSelection = new MoveSelection(new MoveSelectionCellsManager(this.cells));
+        this.moveSelection = new MoveSelection(this.cells);
+    }
+    
+    public render() {
+        // let board:string | undefined = props.Board;
+        // let blackCell:boolean = false;
+        // let cells:any = {};
+        // let sourceLocationUpdaters:any = {};
+            
+        
+        let classes = classNames({
+            'white-to-play': this.props.whiteToPlay,
+            'black-to-play': !this.props.whiteToPlay,
+        });
+
+        return (
+            <div className="chessboard">
+                <table className={classes}>
+                <thead>
+                <BoardBorderRow />
+                </thead>
+                <tbody>
+                {this.renderRows()}
+                </tbody>
+                <tfoot>
+                <BoardBorderRow />
+                </tfoot>
+                </table>
+            </div>
+        );
     }
 
-    cellClicked(x:number, y:number, piece:string):void {
-        let location = `${String.fromCharCode("a".charCodeAt(0) -1 + x)}${y}`;
+    private renderRows() {
+        var rows:any = [];
+        this.clearDownCells();
+        
+        this.blackCell = false;
 
-        this.moveSelection.selected(location, this.props.availableMoves, this.props.whiteToPlay);
-
-        if(this.moveSelection.haveMove) {
-            this.setState({
-                sourceLocationHighlights: [""],
-                destinationLocationHighlights: [""]
-            });
-            this.performMove(this.moveSelection.move);
+        for (let y = 8; y >= 1; y--)
+        {
+            rows.push(this.renderRow(y));
+            this.blackCell = !this.blackCell;
         }
-        else{
-            this.setState({
-                sourceLocationHighlights: [this.moveSelection.from],
-                destinationLocationHighlights: this.moveSelection.possibleDestinations
-            });
-        }
+        return rows;
     }
 
-    renderRow(rowIdx:number):any
+    private renderRow(rowIdx:number):any
     {
         
         if(this.props.board === undefined) return null;
@@ -95,58 +118,35 @@ export default class ChessBoard extends React.Component<Props,State>  {
             </tr>
         );
     };
-
-    renderRows() {
-        var rows:any = [];
-        this.clearDownCells();
-        
-        this.blackCell = false;
-
-        for (let y = 8; y >= 1; y--)
-        {
-            rows.push(this.renderRow(y));
-            this.blackCell = !this.blackCell;
-        }
-        return rows;
-    }
     
-    render() {
-        // let board:string | undefined = props.Board;
-        // let blackCell:boolean = false;
-        // let cells:any = {};
-        // let sourceLocationUpdaters:any = {};
-            
-        
-        let classes = classNames({
-            'white-to-play': this.props.whiteToPlay,
-            'black-to-play': !this.props.whiteToPlay,
-        });
+    private cellClicked(x:number, y:number, piece:string):void {
+        let location = `${String.fromCharCode("a".charCodeAt(0) -1 + x)}${y}`;
 
-        return (
-            <div className="chessboard">
-                <table className={classes}>
-                <thead>
-                <BoardBorderRow />
-                </thead>
-                <tbody>
-                {this.renderRows()}
-                </tbody>
-                <tfoot>
-                <BoardBorderRow />
-                </tfoot>
-                </table>
-            </div>
-        );
+        this.moveSelection.selected(location, this.props.availableMoves, this.props.whiteToPlay);
+
+        if(this.moveSelection.haveMove) {
+            this.setState({
+                sourceLocationHighlights: [""],
+                destinationLocationHighlights: [""]
+            });
+            this.performMove(this.moveSelection.move);
+        }
+        else{
+            this.setState({
+                sourceLocationHighlights: [this.moveSelection.from],
+                destinationLocationHighlights: this.moveSelection.possibleDestinations
+            });
+        }
     }
 
-    performMove(move: string) {
+    private performMove(move: string) {
         if(this.props.onMoveSelected) {
             this.props.onMoveSelected(move);
             this.moveSelection.deselect();
         }
     }
 
-    clearDownCells() {
+    private clearDownCells() {
         for(let y = 1; y <= 8; y++){
             for(let x = 1; x <= 8; x++) {
                 let location = `${String.fromCharCode("a".charCodeAt(0) -1 + x)}${y}`;

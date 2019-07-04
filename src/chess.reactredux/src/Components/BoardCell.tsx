@@ -12,34 +12,21 @@ type Props = {
     IsDestinationLocation?:boolean,
 };
 
-const initialState = {
-
-};
-type State = Readonly<typeof initialState>
-export default class BoardCell extends React.Component<Props, State> {
-    readonly state: State = initialState;
+export default class BoardCell extends React.Component<Props, any> {
 
     constructor(props:Props) {
         super(props);
         this.onClick =this.onClick.bind(this);
     }
 
-    public sourceCellHighlight(value:boolean):void{
-        this.setState({IsSourceLocation: value})
-    }
-
-
-
-    onClick(e:React.MouseEvent<HTMLElement>) {
-        // @(IsDestinationLocation ? "destination-location": "")  
-        // @(IsSourceLocation ? "source-location": "") " 
+    private onClick(e:React.MouseEvent<HTMLElement>) {
         e.preventDefault();
         if(this.props.onCellClicked) {
             this.props.onCellClicked(this.props.X,this.props.Y,this.props.Piece);
-            // this.sourceCellHighlight(true);
         }
     }
-    render() {
+    
+    public render() {
         let piece: string = this.props.Piece || '.';
         let pieceIsWhite = piece.toUpperCase() === piece;
 
@@ -65,46 +52,5 @@ export default class BoardCell extends React.Component<Props, State> {
             </td>
         );
     }
+
 }
-
-// const BoardCell: React.FC<BoardCellProps> = (props) => {
-//     let piece: string = props.Piece || '.';
-//     let pieceIsWhite = piece.toUpperCase() === piece;
-
-//     if(piece.toLowerCase() === 'e' ) {
-//         piece = pieceIsWhite ? 'P' : 'p';
-//     } 
-
-//     let currentSquareIsEmpty = (piece === '.' || piece ===' ');
-
-
-//     // props.updateSourceLocation = setAsSourceLocation;
-
-//     let classes = classNames({
-//         'board-cell': true,
-//         'black-cell': props.IsBlackSquare,
-//         'white-cell': !props.IsBlackSquare,
-//         'white-piece-highlight' : !currentSquareIsEmpty && pieceIsWhite,
-//         'black-piece-highlight' : !currentSquareIsEmpty && !pieceIsWhite,
-//         'source-location' : props.IsSourceLocation,
-//         'destination-location' : props.IsDestinationLocation,
-//     });
-
-//     function onClick(e:React.MouseEvent<HTMLElement>) {
-//         // @(IsDestinationLocation ? "destination-location": "")  
-//         // @(IsSourceLocation ? "source-location": "") " 
-
-//         if(props.onCellClicked) {
-//             props.onCellClicked(props.X, props.Y, props.Piece);
-
-//         }
-//     }
-
-//     return (
-//         <td className={classes} onClick={onClick}>
-//             {piece}
-//         </td>
-//     );
-// }
-
-// export default BoardCell;

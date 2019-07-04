@@ -4,19 +4,16 @@ export default class MoveSelection {
     private fromField:string = "";
     private toField:string = "";
 
-    constructor(
-        private cellsManager:MoveSelectionCellsManager
-        ) {
-
+    constructor(private cells:any) {
+        
     }
-
     public selected(location:string, availableMoves:string[], whiteToPlay:boolean):void {
-        let selectedCell = this.cellsManager.get(location);
+        let selectedCell = this.getCell(location);
 
         if(!selectedCell) return;
 
         if(this.fromField === "" ) {
-            if(this.cellsManager.containsPlayerPiece(location,whiteToPlay)){
+            if(this.containsPlayerPiece(location,whiteToPlay)){
                 this.fromField = location;
             }
             else
@@ -33,8 +30,8 @@ export default class MoveSelection {
 
             var destCell = selectedCell;
 
-            if (!this.cellsManager.cellIsEmpty(destCell.props) 
-                && this.cellsManager.pieceIsWhite(destCell.props) === this.cellsManager.pieceIsWhite(this.cellsManager.get(this.from).props))
+            if (!this.cellIsEmpty(destCell.props) 
+                && this.pieceIsWhite(destCell.props) === this.pieceIsWhite(this.getCell(this.from).props))
             {
                 this.fromField = location;
             }
@@ -80,4 +77,25 @@ export default class MoveSelection {
         this.toField = "";
         this.possibleDestinationsField = [];
     }
+
+    public getCell(location:string):any  {
+        return this.cells[location];
+    }
+
+    private containsPlayerPiece(location:string, playerIsWhite:boolean) {
+        let cell = this.getCell(location);
+
+        if(!cell) return false;
+        if(this.cellIsEmpty(cell.props)) return false;
+
+        return playerIsWhite === this.pieceIsWhite(cell.props);
+    }
+
+
+    private  cellIsEmpty(props:any) {
+        return !props && props.Piece === ' ' || props.Piece === '.'
+    }
+    private  pieceIsWhite(props:any) {
+        return !this.cellIsEmpty(props) && props.Piece.toUpperCase() === props.Piece;
+    }    
 }
