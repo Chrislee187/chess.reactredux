@@ -1,3 +1,17 @@
+# chess.reactredux
+* despite the name, redux not implemented yet, wanted a pure react version first for comparison
+* meant purely as an example/exercise in react, not as a complete chess game player
+* requires my [chess.webapi](https://github.com/Chrislee187/chess.webapi) (written in dotnet core)
+
+## TODOS
+* make the chess.webapi dependency easier to acquire and run
+* doesn't have the random move make player the blazor version has
+* doesn't have the end-game checks the blazor version has
+
+
+
+## CRA default readme.md below
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
