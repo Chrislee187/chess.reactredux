@@ -1,5 +1,3 @@
-import MoveSelectionCellsManager from './MoveSelectionCellsManager'
-
 export default class MoveSelection {
     private fromField:string = "";
     private toField:string = "";
@@ -93,7 +91,7 @@ export default class MoveSelection {
 
 
     private  cellIsEmpty(props:any) {
-        return !props && props.Piece === ' ' || props.Piece === '.'
+        return !props || props.Piece === ' ' || props.Piece === '.'
     }
     private  pieceIsWhite(props:any) {
         return !this.cellIsEmpty(props) && props.Piece.toUpperCase() === props.Piece;

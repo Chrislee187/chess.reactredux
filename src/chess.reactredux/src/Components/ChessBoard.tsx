@@ -1,11 +1,9 @@
 import React from 'react'
+import classNames from 'classnames'
 import './chessboard.css'
 import BoardBorderRow from './BoardBorderRow'
 import BoardCell from './BoardCell'
-import classNames from 'classnames'
 import MoveSelection from './MoveSelection'
-import MoveSelectionCellsManager from './MoveSelectionCellsManager';
-
 
 export type Props = { 
     board: string, 
@@ -39,12 +37,6 @@ export default class ChessBoard extends React.Component<Props,State>  {
     }
     
     public render() {
-        // let board:string | undefined = props.Board;
-        // let blackCell:boolean = false;
-        // let cells:any = {};
-        // let sourceLocationUpdaters:any = {};
-            
-        
         let classes = classNames({
             'white-to-play': this.props.whiteToPlay,
             'black-to-play': !this.props.whiteToPlay,
@@ -90,7 +82,6 @@ export default class ChessBoard extends React.Component<Props,State>  {
             let location = `${String.fromCharCode("a".charCodeAt(0) -1 + x)}${rowIdx}`;
             let index = ((8 - rowIdx) * 8) + x - 1;
 
-    
             let newCell = <BoardCell key={x + ',' + rowIdx} 
                 IsBlackSquare={this.blackCell}
                 Piece = {this.props.board[index]}

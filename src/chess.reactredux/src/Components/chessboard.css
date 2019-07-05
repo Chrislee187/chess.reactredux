@@ -1,3 +1,10 @@
+table {
+    /* this style was manually added as something that the blazor project gets from reboot.css which 
+     * todo: include bootstrap here should solve this
+    */
+    border-collapse: collapse; /* Prevent double borders */
+  }
+
 .chessboard {
     max-width: 50%;
     width: 400px;

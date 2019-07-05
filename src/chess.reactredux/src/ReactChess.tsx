@@ -22,6 +22,8 @@ export default class ReactChess extends React.Component {
 
     getBoard(board?: string, move?: string) {
         // TODO: Configurise host
+        // TODO: how to resolve this dependency https://github.com/Chrislee187/chess.webapi
+        // so that this project can be self-contained
         let host = "https://localhost:5001/api/chessgame";
         let url:string = `${host}`;
 
@@ -44,7 +46,6 @@ export default class ReactChess extends React.Component {
             })
             return json2;
         });
-
     }
 
     onMoveSelected(move: string) {
@@ -61,27 +62,17 @@ export default class ReactChess extends React.Component {
             availableMoves={this.state.availableMoves}
             onMoveSelected={this.onMoveSelected}
         ></ChessBoard>)
-        // let handleWhiteChange = (event:any) => this.setState({ whiteIsHuman: event.target.checked })
-        // let handleBlackChange = (event:any) => this.setState({ blackIsHuman: event.target.checked })
         return (
             <div>
                 <link href="chessboard.css" rel="stylesheet" />
                 <div className="row">
-                    {/* <div className="debug-settings">
-                        
-                        White is human<Checkbox id="WhiteIsHuman" checked={this.state.whiteIsHuman}
-                                            onChange={handleWhiteChange}
-                                            />
-                                             | 
-                        Black is human<Checkbox id="BlackIsHuman"  checked={this.state.blackIsHuman}
-                                            onChange={handleBlackChange}
-                                            />
-                    </div> */}
                     {chessboard}
-                    <AvailableMoveList></AvailableMoveList>
+                    <AvailableMoveList
+                        availableMoves={this.state.availableMoves}
+                        onMoveSelected={this.onMoveSelected}
+                    ></AvailableMoveList>
                 </div>
             </div>
-            // <button onclick="@(async () => await ResetBoardAsync())">Reset Board</button>    // <div className="App">
         );
     
     }
