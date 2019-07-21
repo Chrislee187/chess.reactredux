@@ -24,7 +24,8 @@ export default class AvailableMoveList extends React.Component<Props, State> {
 
         this.props.availableMoves.forEach(move => {
             buttons.push(
-                <button className="move" 
+                <button key={buttons.length}
+                    className="move" 
                     title={move} 
                     onClick={() => this.onClick(move)}
                     >{move}</button>

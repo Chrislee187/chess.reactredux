@@ -1,17 +1,24 @@
-import React from 'react';
+import React from 'react';  
+
 import ChessBoard from './Components/ChessBoard';
 import AvailableMoveList from './Components/AvailableMoveList';
-import Checkbox from './Components/Checkbox'
 
-export default class ReactChess extends React.Component {
-    state = {
-        board: '',
-        availableMoves: [],
-        whiteIsHuman: true,
-        blackIsHuman: false,
-        whiteToPlay: false,
-        blackToPlay: false
-    };
+export type Props = { 
+    board?: string, 
+};
+
+const initialState = {
+    board: '',
+    availableMoves: [],
+    whiteIsHuman: true,
+    blackIsHuman: false,
+    whiteToPlay: false,
+    blackToPlay: false
+}
+export type State = Readonly<typeof initialState>
+
+export default class ReactChess extends React.Component<Props, State> {
+    readonly state: State = initialState;
 
     private lastApiResult:any;
 
@@ -53,27 +60,30 @@ export default class ReactChess extends React.Component {
     }
 
     componentDidMount() {
-        this.getBoard();
+        console.log(`Mounting with board: ${this.props.board}`)
+        this.getBoard(this.props.board);
     }
-    
+
     render() {
         const chessboard = (<ChessBoard board={this.state.board} 
             whiteToPlay={this.state.whiteToPlay} 
             availableMoves={this.state.availableMoves}
             onMoveSelected={this.onMoveSelected}
         ></ChessBoard>)
-        return (
-            <div>
-                <link href="chessboard.css" rel="stylesheet" />
-                <div className="row">
-                    {chessboard}
-                    <AvailableMoveList
-                        availableMoves={this.state.availableMoves}
-                        onMoveSelected={this.onMoveSelected}
-                    ></AvailableMoveList>
-                </div>
+
+        return (            <div>
+            <link href="chessboard.css" rel="stylesheet" />
+            <div className="row">
+                {chessboard}
+                <AvailableMoveList
+                    availableMoves={this.state.availableMoves}
+                    onMoveSelected={this.onMoveSelected}
+                ></AvailableMoveList>
             </div>
-        );
-    
+        </div>
+        
+        )
+        
     }
 }
+
